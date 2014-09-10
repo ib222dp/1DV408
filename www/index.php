@@ -1,2 +1,6 @@
 <?php
-echo "hello world";
+require_once("views/HomeView.php");
+
+$homeView = new HomeView();
+
+$homeView->renderPage();

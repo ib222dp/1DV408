@@ -10,9 +10,6 @@ class HomeView {
     private $autoLogin;
 
     public function renderPage() {
-        //sv_SE.UTF-8 funkar inte lokalt. sv och Swedish funkar, men kodningen blir fel.
-        //Överallt verkar standarden språkkod_LANDSKOD.kodning gälla så jag kör på den. Har testat online på servern och det funkar där.
-        setlocale(LC_TIME, 'sv_SE.UTF-8');
         //Enligt exemplet stor bokstav på månad, men enl svenska skrivregler skrivs månaden med gemen initial, så tar friheten att ändra.
         $dateStr = sprintf("%s, den %d %s år %d. Klockan är [%s:%s:%s].", ucFirst(strftime("%A")) , date("j"), lcFirst(date("F")), date("Y"), date("H"), date("i"), date("s"));
         echo '

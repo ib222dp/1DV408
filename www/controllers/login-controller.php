@@ -4,6 +4,7 @@ use LoginView as View;
 use StateModel as Model;
 
 require_once("views/home-view.php");
+require_once("models/state-model.php");
 
 class LoginController {
 
@@ -12,7 +13,16 @@ class LoginController {
     }
 
     public function start() {
+        $state = new Model\State();
         $homeView = new View\HomeView();
-        $homeView->renderPage("Användarnamn saknas.");
+        if ($homeView->isPost()) {
+            $loginCredentials = $homeView->getLoginCredentials();
+            if ($state->tryLogin($loginCredentials['username'],$loginCredentials['password'],$loginCredentials['autoLogin']))
+                $homeView->renderPage("");
+            else
+                $homeView->renderPage($state->getFailedLoginMessage());
+        } else {
+            $homeView->renderPage("");
+        }
     }
 }

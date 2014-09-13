@@ -9,7 +9,7 @@ require_once("html-templates/footer-html.php");
 
 class HomeView {
 
-    private $userName;
+    private $username;
     private $password;
     private $autoLogin;
     private $postUsernameKey;

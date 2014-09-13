@@ -1,5 +1,7 @@
 <?php
 
+namespace LoginView;
+
 require_once("html_templates/HeadHtml.php");
 require_once("html_templates/FooterHtml.php");
 

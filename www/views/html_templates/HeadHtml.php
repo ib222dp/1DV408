@@ -1,5 +1,7 @@
 <?php
 
+namespace LoginView;
+
 class HeadHtml {
     private $title;
 

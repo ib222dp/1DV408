@@ -1,4 +1,6 @@
 <?php
+namespace LoginView;
+
 class FooterHtml {
 
     public function __construct() {

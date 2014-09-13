@@ -2,8 +2,8 @@
 
 namespace LoginView;
 
-require_once("html_templates/HeadHtml.php");
-require_once("html_templates/FooterHtml.php");
+require_once("html-templates/head-html.php");
+require_once("html-templates/footer-html.php");
 
 
 
@@ -13,7 +13,7 @@ class HomeView {
     private $password;
     private $autoLogin;
 
-    public function renderPage() {
+    public function renderPage($loginFailedMessage) {
         $headHtml = new HeadHtml('1DV408 - Login');
         $footerHtml = new FooterHtml();
 
@@ -25,8 +25,9 @@ class HomeView {
             <h2>Ej Inloggad</h2>
             <form method="post">
                 <fieldset>
-                    <legend>Login - Skriv in användarnamn och lösenord</legend>
-                    <label for="userNameId">Användarnamn:</label>
+                    <legend>Login - Skriv in användarnamn och lösenord</legend>' .
+                    ($loginFailedMessage ? '<p>' . $loginFailedMessage . '</p>' : '')
+                    . ' <label for="userNameId">Användarnamn:</label>
                     <input type="text" name="HomeView::UserName" id="userNameId"></input>
                     <label for="passwordId">Lösenord:</label>
                     <input type="password" name="HomeView::Password" id="passwordId"></input>

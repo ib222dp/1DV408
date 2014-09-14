@@ -1,6 +1,6 @@
 <?php
 
-namespace StateModel;
+namespace LoginApp\Model;
 
 class State {
     private $loginErrorMessage;
@@ -17,7 +17,7 @@ class State {
     public function tryLogin($username, $password, $autoLogin) {
         $isSuccess = false;
         if (!$username) {
-            //username not entered
+            //username not entered 
             //password entered (1.4) or not(1.2), correct(1.4) or not(1.4)
             $this->username = "";
             $this->failedLoginMessage = "Användarnamn saknas. (tf1.2, tf1.4)";
@@ -34,6 +34,7 @@ class State {
                     if ($this->savedCredentials[$username] == $password) {
                         //correct password
                         $this->password = $password;
+                        $this->username = $username;
                         $isSuccess = true;
                     } else {
                         //incorrect password

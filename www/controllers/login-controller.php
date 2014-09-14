@@ -1,7 +1,7 @@
 <?php
-namespace LoginController;
-use LoginView as View;
-use StateModel as Model;
+namespace LoginApp\Controller;
+use LoginApp\View as View;
+use LoginApp\Model as Model;
 
 require_once("views/home-view.php");
 require_once("models/state-model.php");
@@ -9,7 +9,6 @@ require_once("models/state-model.php");
 class LoginController {
 
     public function __construct() {
-        $this->start();
     }
 
     public function start() {
@@ -18,11 +17,11 @@ class LoginController {
         if ($homeView->isPost()) {
             $loginCredentials = $homeView->getLoginCredentials();
             if ($state->tryLogin($loginCredentials['username'],$loginCredentials['password'],$loginCredentials['autoLogin']))
-                $homeView->renderPage("");
+                $homeView->renderPage(true, "");
             else
-                $homeView->renderPage($state->getFailedLoginMessage());
+                $homeView->renderPage(false, $state->getFailedLoginMessage());
         } else {
-            $homeView->renderPage("");
+            $homeView->renderPage(false, "");
         }
     }
 }

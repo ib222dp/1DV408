@@ -1,5 +1,5 @@
 <?php
-namespace LoginView;
+namespace LoginApp\View;
 
 class FooterHtml {
 

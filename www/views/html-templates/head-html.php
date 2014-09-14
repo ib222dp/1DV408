@@ -1,6 +1,6 @@
 <?php
 
-namespace LoginView;
+namespace LoginApp\View;
 
 class HeadHtml {
     private $title;
@@ -11,8 +11,7 @@ class HeadHtml {
 
     public function getHtml() {
 
-        return '<!DOCTYPE html>
-        <html>
+        return '
         <head>
             <meta charset="utf-8" />
             <title>' . $this->title . '</title>

@@ -3,25 +3,27 @@ namespace LoginApp\Controller;
 use LoginApp\View as View;
 use LoginApp\Model as Model;
 
-require_once("views/home-view.php");
-require_once("models/state-model.php");
+require_once("views/login-view.php");
+require_once("models/login-model.php");
 
 class LoginController {
+    private $view;
+    private $model;
 
     public function __construct() {
+        $this->model = new Model\LoginModel();
+        $this->view = new View\LoginView();
     }
 
     public function start() {
-        $state = new Model\State();
-        $homeView = new View\HomeView();
-        if ($homeView->isPost()) {
-            $loginCredentials = $homeView->getLoginCredentials();
-            if ($state->tryLogin($loginCredentials['username'],$loginCredentials['password'],$loginCredentials['autoLogin']))
-                $homeView->renderPage(true, "");
+        if ($this->view->wasLoginButtonClicked()) {
+            $loginCredentials = $this->view->getLoginCredentials();
+            if ($this->model->tryLogin($loginCredentials['username'],$loginCredentials['password'],$loginCredentials['autoLogin']))
+                $this->view->renderPage(true, "");
             else
-                $homeView->renderPage(false, $state->getFailedLoginMessage());
+                $this->view->renderPage(false, $this->model->getFailedLoginMessage());
         } else {
-            $homeView->renderPage(false, "");
+            $this->view->renderPage(false, "");
         }
     }
 }

@@ -7,25 +7,25 @@ require_once("html-templates/footer-html.php");
 
 
 
-class HomeView {
+class LoginView {
+
+    const PostUsernameKey = 'LoginView::Username';
+    const PostPasswordKey = 'LoginView::Password';
+    const PostAutoLoginCheckedKey = 'LoginView::AutoLoginChecked';
+    const PostLoginButtonKey = 'LoginView::LoginButton';
 
     private $username;
     private $password;
     private $autoLogin;
-    private $postUsernameKey;
-    private $postPasswordKey;
-    private $postAutoLoginChecked;
 
     public function __construct() {
-        $this->postUsernameKey = 'HomeView::Username';
-        $this->postPasswordKey = 'HomeView::Password';
-        $this->postAutoLoginChecked = 'HomeView::AutoLoginChecked';
-        $this->username = (isset($_POST[$this->postUsernameKey]) ? $_POST[$this->postUsernameKey] : "");
-        $this->password = (isset($_POST[$this->postPasswordKey]) ? $_POST[$this->postPasswordKey] : "");
-        $this->autoLogin = (isset($_POST[$this->postAutoLoginChecked]) ? true : false);
+        $this->username = (isset($_POST[self::PostUsernameKey]) ? $_POST[self::PostUsernameKey] : "");
+        $this->password = (isset($_POST[self::PostPasswordKey]) ? $_POST[self::PostPasswordKey] : "");
+        $this->autoLogin = (isset($_POST[self::PostAutoLoginCheckedKey]) ? true : false);
     }
-    public function isPost() {
-        return !empty($_POST);
+    public function wasLoginButtonClicked() {
+        return (($_SERVER['REQUEST_METHOD'] == 'POST')
+            && (isset($_POST[self::PostLoginButtonKey])));
     }
     public function getLoginCredentials() {
         $loginCredentials = array(
@@ -49,14 +49,14 @@ class HomeView {
                     <legend>Login - Skriv in användarnamn och lösenord</legend>' .
                 ($loginFailedMessage ? '<p>' . $loginFailedMessage . '</p>' : '')
                 . ' <label for="userNameId">Användarnamn:</label>
-                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId"></input>
+                    <input type="text" name="' . self::PostUsernameKey . '" id="usernameId"></input>
                     <label for="passwordId">Lösenord:</label>
-                    <input type="password" name="' . $this->postPasswordKey . '" id="passwordId"></input>
+                    <input type="password" name="' . self::PostPasswordKey . '" id="passwordId"></input>
                     <label for="autoLoginId">Håll mig inloggad:</label>
-                    <input type="checkbox" name="' . $this->postAutoLoginChecked . '" id="autoLoginId"' .
+                    <input type="checkbox" name="' . self::PostAutoLoginCheckedKey . '" id="autoLoginId"' .
                 ($this->autoLogin ? "checked" : "")
                 . '></input>
-                    <input type="submit" value="Logga in" />
+                    <input type="submit" name="' . self::PostLoginButtonKey . '" value="Logga in" />
                 </fieldset>
             </form>
             <p></p>' .

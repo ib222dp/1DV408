@@ -2,8 +2,7 @@
 
 namespace LoginApp\Model;
 
-class State {
-    private $loginErrorMessage;
+class LoginModel {
     private $username;
     private $password;
     private $autoLogin;
@@ -11,13 +10,13 @@ class State {
     private $savedCredentials;
 
     public function __construct() {
-        $this->savedCredentials = array('Admin'=>'Password');
+        $this->savedCredentials = array('Admin'=>'Password'); //hard coded login credentials
     }
 
     public function tryLogin($username, $password, $autoLogin) {
         $isSuccess = false;
         if (!$username) {
-            //username not entered 
+            //username not entered
             //password entered (1.4) or not(1.2), correct(1.4) or not(1.4)
             $this->username = "";
             $this->failedLoginMessage = "Användarnamn saknas. (tf1.2, tf1.4)";
@@ -62,11 +61,11 @@ class State {
         return $this->failedLoginMessage;
     }
 
-    public function loginSucceeded() {
-        unset($_SESSION['loginErrorMessage']);
-    }
-
-    public function loginFailed($loginErrorMessage) {
-        $_SESSION['loginErrorMessage'] = $loginErrorMessage;
-    }
+//    public function loginSucceeded() {
+//        unset($_SESSION['loginErrorMessage']);
+//    }
+//
+//    public function loginFailed($loginErrorMessage) {
+//        $_SESSION['loginErrorMessage'] = $loginErrorMessage;
+//    }
 }

@@ -27,13 +27,14 @@ class LoginView {
         return (($_SERVER['REQUEST_METHOD'] == 'POST')
             && (isset($_POST[self::PostLoginButtonKey])));
     }
-    public function getLoginCredentials() {
-        $loginCredentials = array(
-           'username'=>$this->username,
-           'password'=>$this->password,
-           'autoLogin'=>$this->autoLogin
-        );
-        return $loginCredentials;
+    public function getUsername() {
+        return $this->username;
+    }
+    public function getPassword() {
+        return $this->password;
+    }
+    public function getAutoLoginChecked() {
+        return $this->autoLogin;
     }
     public function renderPage($isLoggedIn, $loginFailedMessage) {
         $headHtml = new HeadHtml('1DV408 - Login');

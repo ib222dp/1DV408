@@ -17,8 +17,7 @@ class LoginController {
 
     public function start() {
         if ($this->view->wasLoginButtonClicked()) {
-            $loginCredentials = $this->view->getLoginCredentials();
-            if ($this->model->tryLogin($loginCredentials['username'],$loginCredentials['password'],$loginCredentials['autoLogin']))
+            if ($this->model->tryLogin($this->view->getUsername(), $this->view->getPassword(), $this->view->getAutoLoginChecked()))
                 $this->view->renderPage(true, "");
             else
                 $this->view->renderPage(false, $this->model->getFailedLoginMessage());

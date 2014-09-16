@@ -50,18 +50,17 @@ class LoginLoginView extends LoginView {
             <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att det fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
             <h2>Ej Inloggad</h2>
 
-            <form action="' . $_SERVER['PHP_SELF'] . '"method="post">
+            <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
                 <fieldset>
                     <legend>Login - Skriv in användarnamn och lösenord</legend>' .
                 ($loginFailedMessage ? '<p>' . $loginFailedMessage . '</p>' : '')
-                . ' <label for="userNameId">Användarnamn:</label>
-                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId" value="' . $this->username . '"></input>
+                . ' <label for="usernameId">Användarnamn:</label>
+                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId" value="' . $this->username . '" />
                     <label for="passwordId">Lösenord:</label>
-                    <input type="password" name="' . $this->postPasswordKey . '" id="passwordId"></input>
+                    <input type="password" name="' . $this->postPasswordKey . '" id="passwordId" />
                     <label for="autoLoginId">Håll mig inloggad:</label>
                     <input type="checkbox" name="' . $this->postAutoLoginCheckedKey . '" id="autoLoginId"' .
-                ($this->autoLogin ? "checked" : "")
-                . '></input>
+                ($this->autoLogin ? "checked" : "") . ' />
                     <input type="submit" name="' . $this->postLoginButtonNameKey . '" value="Logga in" />
                 </fieldset>
             </form>

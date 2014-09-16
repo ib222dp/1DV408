@@ -10,7 +10,7 @@ class LoginModel {
     private $savedCredentials;
 
     public function __construct() {
-        $this->savedCredentials = array('Admin'=>'Password'); //hard coded login credentials
+        $this->savedCredentials = array('Admin'=>'Password', 'User'=>'notell2no1'); //hard coded login credentials
     }
 
     public function tryLogin($username, $password, $autoLogin) {
@@ -47,6 +47,9 @@ class LoginModel {
                 }
             }
         }
+        if ($isSuccess) {
+            $_SESSION['tempValue7'] = true;
+        }
         return $isSuccess;
     }
 
@@ -61,6 +64,9 @@ class LoginModel {
         return $this->failedLoginMessage;
     }
 
+    public function isLoggedIn() {
+        return (isset($_SESSION['tempValue7']));
+    }
 //    public function loginSucceeded() {
 //        unset($_SESSION['loginErrorMessage']);
 //    }

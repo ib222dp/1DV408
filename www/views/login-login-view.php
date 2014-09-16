@@ -25,6 +25,7 @@ class LoginLoginView extends LoginView {
         $this->headHtml = new HeadHtml('1DV408 - Login');
 
     }
+
     public function wasLoginButtonClicked() {
         return (($_SERVER['REQUEST_METHOD'] == 'POST')
             && (isset($_POST[$this->postLoginButtonNameKey])));
@@ -41,14 +42,15 @@ class LoginLoginView extends LoginView {
     }
 
     public function renderPage($loginFailedMessage = "") {
-
+        //header('location: '. $_SERVER['PHP_SELF']); //blir bara "This webpage has a redirect loop" :/
         echo '<html>'
         . $this->headHtml->getHtml() .
         '<body>
             <h1>Laborationskod hl222ih</h1>
             <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att det fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
             <h2>Ej Inloggad</h2>
-            <form method="post">
+
+            <form action="' . $_SERVER['PHP_SELF'] . '"method="post">
                 <fieldset>
                     <legend>Login - Skriv in användarnamn och lösenord</legend>' .
                 ($loginFailedMessage ? '<p>' . $loginFailedMessage . '</p>' : '')

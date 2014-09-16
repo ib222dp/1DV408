@@ -19,7 +19,13 @@ class LoginController {
     public function start() {
         if ($this->model->isLoggedIn()) {
             $this->view = new View\LoggedInLoginView($this->model);
-            $this->view->renderPage();
+            if ($this->view->wasLogoutLinkClicked()) {
+                session_unset();
+                $this->view = new View\LoginLoginView($this->model);
+                $this->view->renderPage($this->model->getLogoutMessage());
+            } else {
+                $this->view->renderPage();
+            }
         } else {
             $this->view = new View\LoginLoginView($this->model);
             if ($this->view->wasLoginButtonClicked()) {

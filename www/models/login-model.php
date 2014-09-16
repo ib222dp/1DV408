@@ -71,6 +71,9 @@ class LoginModel {
         return $this->loginSuccessMessage;
     }
 
+    public function getLogOutMessage() {
+        return "Du har nu loggat ut";
+    }
     public function isLoggedIn() {
         return (isset($_SESSION[$this->sessionUsernameKey]));
     }

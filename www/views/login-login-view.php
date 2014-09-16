@@ -45,7 +45,7 @@ class LoginLoginView extends LoginView {
                     <legend>Login - Skriv in användarnamn och lösenord</legend>' .
                 ($loginFailedMessage ? '<p>' . $loginFailedMessage . '</p>' : '')
                 . ' <label for="userNameId">Användarnamn:</label>
-                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId"></input>
+                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId" value="' . $this->username . '"></input>
                     <label for="passwordId">Lösenord:</label>
                     <input type="password" name="' . $this->postPasswordKey . '" id="passwordId"></input>
                     <label for="autoLoginId">Håll mig inloggad:</label>

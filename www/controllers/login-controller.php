@@ -25,9 +25,9 @@ class LoginController {
             if ($this->view->wasLoginButtonClicked()) {
                 if ($this->model->tryLogin($this->view->getUsername(), $this->view->getPassword(), $this->view->getAutoLoginChecked())) {
                     $this->view = new View\LoggedInLoginView($this->model);
-                    $this->view->renderPage();
+                    $this->view->renderPage($this->model->getLoginSuccessMessage());
                 } else {
-                    $this->view->renderPage($this->model->getFailedLoginMessage());
+                    $this->view->renderPage($this->model->getLoginFailedMessage());
                 }
             } else {
                 $this->view->renderPage();

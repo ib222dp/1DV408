@@ -6,7 +6,8 @@ class LoginModel {
     private $sessionUsernameKey = 'LoginModel::Username';
     private $sessionPasswordKey = 'LoginModel::Password';
     private $sessionAutoLoginKey = 'LoginModel::AutoLogin';
-    private $failedLoginMessage;
+    private $loginFailedMessage;
+    private $loginSuccessMessage;
     private $savedCredentials;
 
     public function __construct() {
@@ -18,26 +19,27 @@ class LoginModel {
         if (!$username) {
             //username not entered
             //password not entered (tf1.2), password entered (1.4)
-            $this->failedLoginMessage = "Användarnamn saknas."; //tf1.2, tf1.4
+            $this->loginFailedMessage = "Användarnamn saknas."; //tf1.2, tf1.4
         } else {
             //username entered
             if (!$password) {
                 //password not entered
-                $this->failedLoginMessage = "Lösenord saknas."; //tf1.3
+                $this->loginFailedMessage = "Lösenord saknas."; //tf1.3
             } else {
                 //password entered
                 if (array_key_exists($username, $this->savedCredentials)) {
                     //username exists
                     if ($this->savedCredentials[$username] == $password) {
                         //correct password
+                        $this->loginSuccessMessage = "Inloggningen lyckades"; //tf1.7
                         $isSuccess = true;
                     } else {
                         //incorrect password
-                        $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.5
+                        $this->loginFailedMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.5
                     }
                 } else {
                     //username doesn't exist, password correct or not irrelevant
-                    $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.6
+                    $this->loginFailedMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.6
                 }
             }
         }
@@ -56,8 +58,12 @@ class LoginModel {
         return $_SESSION[$this->sessionPasswordKey];
     }
 
-    public function getFailedLoginMessage() {
-        return $this->failedLoginMessage;
+    public function getLoginFailedMessage() {
+        return $this->loginFailedMessage;
+    }
+
+    public function getLoginSuccessMessage() {
+        return $this->loginSuccessMessage;
     }
 
     public function isLoggedIn() {

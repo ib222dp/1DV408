@@ -10,13 +10,14 @@ class LoggedInLoginView extends LoginView {
         parent::__construct($model);
     }
 
-    public function renderPage() {
+    public function renderPage($loginSuccessMessage = "") {
 
         echo '<html>'
         . $this->headHtml->getHtml() .
         '<body>
             <h1>Laborationskod hl222ih</h1>
             <h2>' . $this->model->getUsername() . ' är inloggad' . '</h2>
+            ' . ($loginSuccessMessage ? '<p>' . $loginSuccessMessage . '</p>' : '') . '
             <p><a href="" onclick="">Logga ut</a></p>
             <p></p>' .
             $this->footerHtml->getHtml() .

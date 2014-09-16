@@ -5,21 +5,29 @@ namespace LoginApp\View;
 use LoginApp\Model\LoginModel;
 
 class LoginLoginView extends LoginView {
-    private $postUsernameKey = 'LoginView::Username';
-    private $postPasswordKey = 'LoginView::Password';
-    private $postAutoLoginCheckedKey = 'LoginView::AutoLoginChecked';
-    private $postLoginButtonKey = 'LoginView::LoginButton';
+    private $postUsernameKey;
+    private $postPasswordKey;
+    private $postAutoLoginCheckedKey;
+    private $postLoginButtonNameKey;
 
     public function __construct(LoginModel $model) {
+        $this->postUsernameKey = get_class() . '::Username';
+        $this->postPasswordKey = get_class() . '::Password';
+        $this->postAutoLoginCheckedKey = get_class() . '::AutoLoginChecked';
+        $this->postLoginButtonNameKey = get_class() . '::LoginButtonName';
+
         $this->username = (isset($_POST[$this->postUsernameKey]) ? $_POST[$this->postUsernameKey] : "");
         $this->password = (isset($_POST[$this->postPasswordKey]) ? $_POST[$this->postPasswordKey] : "");
         $this->autoLogin = (isset($_POST[$this->postAutoLoginCheckedKey]) ? true : false);
 
         parent::__construct($model);
+
+        $this->headHtml = new HeadHtml('1DV408 - Login');
+
     }
     public function wasLoginButtonClicked() {
         return (($_SERVER['REQUEST_METHOD'] == 'POST')
-            && (isset($_POST[$this->postLoginButtonKey])));
+            && (isset($_POST[$this->postLoginButtonNameKey])));
     }
 
     public function getUsername() {
@@ -52,7 +60,7 @@ class LoginLoginView extends LoginView {
                     <input type="checkbox" name="' . $this->postAutoLoginCheckedKey . '" id="autoLoginId"' .
                 ($this->autoLogin ? "checked" : "")
                 . '></input>
-                    <input type="submit" name="' . $this->postLoginButtonKey . '" value="Logga in" />
+                    <input type="submit" name="' . $this->postLoginButtonNameKey . '" value="Logga in" />
                 </fieldset>
             </form>
             <p></p>' .

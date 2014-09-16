@@ -8,6 +8,8 @@ class LoggedInLoginView extends LoginView {
 
     public function __construct(LoginModel $model) {
         parent::__construct($model);
+
+        $this->headHtml = new HeadHtml('1DV408 - Logged in');
     }
 
     public function renderPage($loginSuccessMessage = "") {

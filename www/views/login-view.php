@@ -20,7 +20,6 @@ abstract class LoginView {
 
     public function __construct(LoginModel $model) {
         $this->model = $model;
-        $this->headHtml = new HeadHtml('1DV408 - Login');
         $this->footerHtml = new FooterHtml();
     }
 }

@@ -3,14 +3,19 @@
 namespace LoginApp\Model;
 
 class LoginModel {
-    private $sessionUsernameKey = 'LoginModel::Username';
-    private $sessionPasswordKey = 'LoginModel::Password';
-    private $sessionAutoLoginKey = 'LoginModel::AutoLogin';
+    private $sessionUsernameKey;
+    private $sessionPasswordKey;
+    private $sessionAutoLoginKey;
     private $loginFailedMessage;
     private $loginSuccessMessage;
     private $savedCredentials;
 
     public function __construct() {
+
+        $this->sessionUsernameKey = get_class() . '::Username';
+        $this->sessionPasswordKey = get_class() . '::Password';
+        $this->sessionAugoLoginKey = get_class() . '::AutoLogin';
+
         $this->savedCredentials = array('Admin'=>'Password', 'User'=>'notell2no1'); //hard coded login credentials
     }
 

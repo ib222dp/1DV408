@@ -30,7 +30,7 @@ class LoginController {
                     $this->view->renderPage($this->model->getFailedLoginMessage());
                 }
             } else {
-                $this->view->renderPage("");
+                $this->view->renderPage();
             }
         }
     }

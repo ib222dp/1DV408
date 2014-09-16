@@ -32,13 +32,13 @@ class LoginLoginView extends LoginView {
         return $this->autoLogin;
     }
 
-    public function renderPage($loginFailedMessage) {
+    public function renderPage($loginFailedMessage = "") {
 
         echo '<html>'
         . $this->headHtml->getHtml() .
         '<body>
             <h1>Laborationskod hl222ih</h1>
-            <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att de fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
+            <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att det fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
             <h2>Ej Inloggad</h2>
             <form method="post">
                 <fieldset>

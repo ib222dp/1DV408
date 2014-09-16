@@ -3,9 +3,9 @@
 namespace LoginApp\Model;
 
 class LoginModel {
-    private $username;
-    private $password;
-    private $autoLogin;
+    private $sessionUsernameKey = 'LoginModel::Username';
+    private $sessionPasswordKey = 'LoginModel::Password';
+    private $sessionAutoLoginKey = 'LoginModel::AutoLogin';
     private $failedLoginMessage;
     private $savedCredentials;
 
@@ -17,47 +17,43 @@ class LoginModel {
         $isSuccess = false;
         if (!$username) {
             //username not entered
-            //password entered (1.4) or not(1.2), correct(1.4) or not(1.4)
-            $this->username = "";
-            $this->failedLoginMessage = "Användarnamn saknas. (tf1.2, tf1.4)";
+            //password not entered (tf1.2), password entered (1.4)
+            $this->failedLoginMessage = "Användarnamn saknas."; //tf1.2, tf1.4
         } else {
             //username entered
             if (!$password) {
                 //password not entered
-                $this->failedLoginMessage = "Lösenord saknas. (tf1.3)";
+                $this->failedLoginMessage = "Lösenord saknas."; //tf1.3
             } else {
                 //password entered
                 if (array_key_exists($username, $this->savedCredentials)) {
                     //username exists
-                    $this->username = $username;
                     if ($this->savedCredentials[$username] == $password) {
                         //correct password
-                        $this->password = $password;
-                        $this->username = $username;
                         $isSuccess = true;
                     } else {
                         //incorrect password
-                        $this->password = "";
-                        $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord. (tf1.5)";
+                        $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.5
                     }
                 } else {
                     //username doesn't exist, password correct or not irrelevant
-                    $this->password = "";
-                    $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord. (tf1.6)";
+                    $this->failedLoginMessage = "Felaktigt användarnamn och/eller lösenord."; //tf1.6
                 }
             }
         }
         if ($isSuccess) {
-            $_SESSION['tempValue7'] = true;
+            $_SESSION[$this->sessionUsernameKey] = $username;
+            $_SESSION[$this->sessionPasswordKey] = $password;
+            $_SESSION[$this->sessionAutoLoginKey] = $autoLogin;
         }
         return $isSuccess;
     }
 
     public function getUsername() {
-        return $this->username;
+        return $_SESSION[$this->sessionUsernameKey];
     }
     public function getPassword() {
-        return $this->password;
+        return $_SESSION[$this->sessionPasswordKey];
     }
 
     public function getFailedLoginMessage() {
@@ -65,7 +61,7 @@ class LoginModel {
     }
 
     public function isLoggedIn() {
-        return (isset($_SESSION['tempValue7']));
+        return (isset($_SESSION[$this->sessionUsernameKey]));
     }
 //    public function loginSucceeded() {
 //        unset($_SESSION['loginErrorMessage']);

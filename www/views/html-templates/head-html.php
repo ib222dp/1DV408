@@ -16,6 +16,7 @@ class HeadHtml {
             <meta charset="utf-8" />
             <title>' . $this->title . '</title>
             <link rel="stylesheet" type="text/css" href="styles/styles.css" />
+            <!-- <script src="scripts/login-app.js"></script> -->
         </head>';
     }
 }

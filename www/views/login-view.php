@@ -22,4 +22,5 @@ abstract class LoginView {
         $this->model = $model;
         $this->footerHtml = new FooterHtml();
     }
+
 }

@@ -17,26 +17,21 @@ class LoginController {
     }
 
     public function start() {
-        if ($this->model->isLoggedIn()) {
-            $this->view = new View\LoggedInLoginView($this->model);
-            if ($this->view->wasLogoutLinkClicked()) {
-                session_unset();
-                $this->view = new View\LoginLoginView($this->model);
-                $this->view->renderPage($this->model->getLogoutMessage());
+        if (!$this->model->isLoggedIn()) {
+            $this->view = new View\LoginLoginView($this->model);
+            $this->view->renderPage();
+            if ($this->view->wasLoginButtonClicked()) {
+                $this->model->tryLogin($this->view->getUsername(), $this->view->getPassword(), $this->view->getAutoLoginChecked());
             } else {
-                $this->view->renderPage();
+                $this->model->unsetNotification();
             }
         } else {
-            $this->view = new View\LoginLoginView($this->model);
-            if ($this->view->wasLoginButtonClicked()) {
-                if ($this->model->tryLogin($this->view->getUsername(), $this->view->getPassword(), $this->view->getAutoLoginChecked())) {
-                    $this->view = new View\LoggedInLoginView($this->model);
-                    $this->view->renderPage($this->model->getLoginSuccessMessage());
-                } else {
-                    $this->view->renderPage($this->model->getLoginFailedMessage());
-                }
+            $this->view = new View\LoggedInLoginView($this->model);
+            $this->view->renderPage();
+            if ($this->view->wasLogoutLinkClicked()) {
+                $this->model->logout();
             } else {
-                $this->view->renderPage();
+                $this->model->unsetNotification();
             }
         }
     }

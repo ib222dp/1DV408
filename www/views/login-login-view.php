@@ -27,8 +27,6 @@ class LoginLoginView extends LoginView {
     }
 
     public function wasLoginButtonClicked() {
-//        return (($_SERVER['REQUEST_METHOD'] == 'POST')
-//            && (isset($_POST[$this->postLoginButtonNameKey])));
         return isset($_POST[$this->postLoginButtonNameKey]);
     }
 
@@ -38,42 +36,49 @@ class LoginLoginView extends LoginView {
     public function getPassword() {
         return $this->password;
     }
-    public function getAutoLoginChecked() {
+    public function wasAutoLoginChecked() {
         return $this->autoLogin;
     }
 
-    public function renderPage($loginFailedMessage = "") {
-        $notification = $this->model->getNotification();
+    public function doesLoginCookieExist() {
+        return ((isset($_COOKIE[$this->cookieUsernameKey]) || (isset($_COOKIE[$this->cookieEncryptedPasswordKey]))));
+    }
+    public function renderPage() {
+        if (isset($_COOKIE[$this->cookieEncryptedPasswordKey])) {
+            // TODO: something
+        }
+        echo '<html>'
+        . $this->headHtml->getHtml() .
+        '<body>
+            <h1>Laborationskod hl222ih</h1>
+            <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att det fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
+            <h2>Ej Inloggad</h2>
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                header('location: '. $_SERVER['PHP_SELF']);
-        } else {
-            echo '<html>'
-            . $this->headHtml->getHtml() .
-            '<body>
-                <h1>Laborationskod hl222ih</h1>
-                <p><a href="" onclick="alert(\'Saknar funktionalitet.\n\nFinns bara med för att det fanns med\n\npå bilderna i krav och testfall.\')">Registrera ny användare</a></p>
-                <h2>Ej Inloggad</h2>
-
-                <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
-                    <fieldset>
-                        <legend>Login - Skriv in användarnamn och lösenord</legend>' .
-                    ($notification ? '<p>' . $notification . '</p>' : '')
-                    . ' <label for="usernameId">Användarnamn:</label>
-                        <input type="text" name="' . $this->postUsernameKey . '" id="usernameId" value="' . $this->model->getUsername() . '" />
-                        <label for="passwordId">Lösenord:</label>
-                        <input type="password" name="' . $this->postPasswordKey . '" id="passwordId" />
-                        <label for="autoLoginId">Håll mig inloggad:</label>
-                        <input type="checkbox" name="' . $this->postAutoLoginCheckedKey . '" id="autoLoginId"' .
-                    ($this->autoLogin ? "checked" : "") . ' />
-                        <input type="submit" name="' . $this->postLoginButtonNameKey . '" value="Logga in" />
-                    </fieldset>
-                </form>
-                <p></p>' .
-                $this->footerHtml->getHtml() .
-            '</body>
-            </html>
-            ';
+            <form action="' . $_SERVER['PHP_SELF'] . '" method="post">
+                <fieldset>
+                    <legend>Login - Skriv in användarnamn och lösenord</legend>' .
+                ($this->model->getNotification() ? '<p>' . $this->model->getNotification() . '</p>' : '')
+                . ' <label for="usernameId">Användarnamn:</label>
+                    <input type="text" name="' . $this->postUsernameKey . '" id="usernameId" value="' . $this->model->getUsername() . '" autofocus />
+                    <label for="passwordId">Lösenord:</label>
+                    <input type="password" name="' . $this->postPasswordKey . '" id="passwordId" />
+                    <label for="autoLoginId">Håll mig inloggad:</label>
+                    <input type="checkbox" name="' . $this->postAutoLoginCheckedKey . '" id="autoLoginId"' .
+                ($this->autoLogin ? "checked" : "") . ' />
+                    <input type="submit" name="' . $this->postLoginButtonNameKey . '" value="Logga in" />
+                </fieldset>
+            </form>
+            <p></p>' .
+            $this->footerHtml->getHtml() .
+        '</body>
+        </html>
+        ';
+    }
+    public function setCookiesIfAutoLogin() {
+        if ($this->autoLogin) {
+            $encryptedPassword = $this->model->encryptPassword($_POST[$this->postPasswordKey]);
+            setcookie($this->cookieUsernameKey, $_POST[$this->postUsernameKey], time()+2592000, '/'); //expire in 30 days
+            setcookie($this->cookieEncryptedPasswordKey, $encryptedPassword, time()+2592000, '/');
         }
     }
 }

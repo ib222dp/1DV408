@@ -33,7 +33,7 @@ class LoginController {
             if ($this->view->wasLoginButtonClicked()) {
                 if ($this->model->tryLogin($this->view->getUsername(), $this->view->getPassword(), $this->view->wasAutoLoginChecked())) {
                     $this->view->setCookiesIfAutoLogin();
-                    $this->view->setServersideCookieExpiration();
+                    $this->model->setServersideCookieExpirationIfAutoLogin();
                     $willRedirect = true;
                 }
             } elseif ($this->view->doesLoginCookieExist()) {

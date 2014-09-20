@@ -17,7 +17,9 @@ class LoginModel {
         $this->sessionIsLoggedInKey = get_class() . '::IsLoggedIn';
         $this->sessionNotificationKey = get_class() . '::NotificationKey';
 
-        $this->savedCredentials = array('Admin'=>$this->encryptPassword('Password'), 'User'=>$this->encryptPassword('notell2no1')); //hard coded login credentials
+        $this->savedCredentials = array('Admin'=>$this->encryptPassword('Password'),
+            'User'=>$this->encryptPassword('notell2no1'),
+            'Admin2'=>$this->encryptPassword('Password2')); //hard coded login credentials
     }
 
     public function encryptPassword($password) {
@@ -40,8 +42,12 @@ class LoginModel {
             //username-cookie exists
             if ($this->savedCredentials[$username] == $encryptedPassword) {
                 //valid password-cookie
-                $_SESSION[$this->sessionNotificationKey] = "Inloggning lyckades via cookies"; //tf3.3
-                $isSuccess = true;
+                if ($this->getServersideCookieExpiration($username) > time()) {
+                    $_SESSION[$this->sessionNotificationKey] = "Inloggning lyckades via cookies" . ":". $this->getServersideCookieExpiration($username) . "..." . time(); //tf3.3
+                    $isSuccess = true;
+                } else {
+                    $_SESSION[$this->sessionNotificationKey] = "Felaktig information i cookie"; //tf3.5
+                }
             } else {
                 //invalid password-cookie
                 $_SESSION[$this->sessionNotificationKey] = "Felaktig information i cookie"; //tf3.4
@@ -109,7 +115,7 @@ class LoginModel {
     }
 
     public function isAutoLoginChecked() {
-        return isset($_SESSION[$this->sessionAutoLoginKey]);
+        return isset($_SESSION[$this->sessionAutoLoginKey]) ? $_SESSION[$this->sessionAutoLoginKey] : false;
     }
 
     public function getNotification() {
@@ -123,7 +129,52 @@ class LoginModel {
         return (isset($_SESSION[$this->sessionIsLoggedInKey]));
     }
 
-    public function setServersideCookieExpiration() {
+    public function setServersideCookieExpirationIfAutoLogin() {
+        if (!$this->isAutoLoginChecked()) return;
 
+        //same as cookie expiration: 30 days (30*24*60*60)
+        $expire = time() + 2592000;
+        $delimiter = "::-:-::";
+        $user = $_SESSION[$this->sessionUsernameKey];
+        $newExpirationLine = $user . $delimiter . $expire . PHP_EOL;
+        ;
+        $filename = "cookieExpirationTimes.txt";
+        $lines = array();
+        if (file_exists($filename))
+            $lines = file($filename);
+
+        $hasMatch = false;
+        for ($i = 0; $i < count($lines) - 1; $i++) {
+            if (explode($delimiter, $lines[$i])[0] == $user) {
+                $lines[$i] = $newExpirationLine;
+                $hasMatch = true;
+            }
+        }
+        if (!$hasMatch) {
+            array_push($lines, $newExpirationLine);
+        }
+
+        $fileHandle = fopen($filename, "w");
+        fwrite($fileHandle, implode("", $lines));
+        fclose($fileHandle);
+    }
+
+    private function getServersideCookieExpiration($username) {
+        //TODO: read and return expiration for user
+
+        $delimiter = "::-:-::";
+        $filename = "cookieExpirationTimes.txt";
+
+        $lines = array();
+        if (file_exists($filename))
+            $lines = file($filename);
+
+        $expirationTime = 0;
+        foreach ($lines as $line) {
+            if (explode($delimiter, $line)[0] == $username)
+                $expirationTime = explode($delimiter, trim($line))[1];
+        }
+
+        return $expirationTime;
     }
 }

@@ -7,6 +7,7 @@ class LoginModel {
     private $sessionAutoLoginKey;
     private $sessionIsLoggedInKey;
     private $sessionNotificationKey;
+    private $sessionUserAgentKey;
 
     private $savedCredentials;
 
@@ -16,6 +17,7 @@ class LoginModel {
         $this->sessionAutoLoginKey = get_class() . '::AutoLogin';
         $this->sessionIsLoggedInKey = get_class() . '::IsLoggedIn';
         $this->sessionNotificationKey = get_class() . '::NotificationKey';
+        $this->sessionUserAgentKey = get_class() . '::UserAgentKey';
 
         $this->savedCredentials = array('Admin'=>$this->encryptPassword('Password'),
             'User'=>$this->encryptPassword('notell2no1'),
@@ -34,6 +36,7 @@ class LoginModel {
         $_SESSION[$this->sessionNotificationKey] = "Du har nu loggat ut";
         unset($_SESSION[$this->sessionUsernameKey]);
         unset($_SESSION[$this->sessionIsLoggedInKey]);
+        unset($_SESSION[$this->sessionUserAgentKey]);
     }
     public function tryLoginWithCookie($username, $encryptedPassword) {
         $isSuccess = false;
@@ -43,7 +46,7 @@ class LoginModel {
             if ($this->savedCredentials[$username] == $encryptedPassword) {
                 //valid password-cookie
                 if ($this->getServersideCookieExpiration($username) > time()) {
-                    $_SESSION[$this->sessionNotificationKey] = "Inloggning lyckades via cookies" . ":". $this->getServersideCookieExpiration($username) . "..." . time(); //tf3.3
+                    $_SESSION[$this->sessionNotificationKey] = "Inloggning lyckades via cookies"; //tf3.3
                     $isSuccess = true;
                 } else {
                     $_SESSION[$this->sessionNotificationKey] = "Felaktig information i cookie"; //tf3.5
@@ -52,15 +55,15 @@ class LoginModel {
                 //invalid password-cookie
                 $_SESSION[$this->sessionNotificationKey] = "Felaktig information i cookie"; //tf3.4
             }
-        } else {
-            //$_SESSION[$this->sessionNotificationKey] = "Felaktig information i cookie"; //tf3.4
         }
         $_SESSION[$this->sessionUsernameKey] = $username;
 
         if ($isSuccess) {
             $_SESSION[$this->sessionIsLoggedInKey] = true;
+            $_SESSION[$this->sessionUserAgentKey] = $_SERVER['HTTP_USER_AGENT'];
         } else {
             unset($_SESSION[$this->sessionIsLoggedInKey]);
+            unset($_SESSION[$this->sessionUserAgentKey]);
         }
         return $isSuccess;
     }
@@ -104,8 +107,10 @@ class LoginModel {
         if ($isSuccess) {
             $_SESSION[$this->sessionIsLoggedInKey] = true;
             $_SESSION[$this->sessionAutoLoginKey] = $autoLogin;
+            $_SESSION[$this->sessionUserAgentKey] = $_SERVER['HTTP_USER_AGENT'];
         } else {
             unset($_SESSION[$this->sessionIsLoggedInKey]);
+            unset($_SESSION[$this->sessionUserAgentKey]);
         }
         return $isSuccess;
     }
@@ -133,10 +138,10 @@ class LoginModel {
         if (!$this->isAutoLoginChecked()) return;
 
         //same as cookie expiration: 30 days (30*24*60*60)
-        $expire = time() + 2592000;
+        $expirationTime = time() + 2592000;
         $delimiter = "::-:-::";
-        $user = $_SESSION[$this->sessionUsernameKey];
-        $newExpirationLine = $user . $delimiter . $expire . PHP_EOL;
+        $username = $_SESSION[$this->sessionUsernameKey];
+        $newExpirationLine = $username . $delimiter . $expirationTime . PHP_EOL;
         ;
         $filename = "cookieExpirationTimes.txt";
         $lines = array();
@@ -144,8 +149,12 @@ class LoginModel {
             $lines = file($filename);
 
         $hasMatch = false;
-        for ($i = 0; $i < count($lines) - 1; $i++) {
-            if (explode($delimiter, $lines[$i])[0] == $user) {
+        //utf-8 encoded files start with \xEF\xBB\xBF, so I have prepared the cookieExpirationTimes.txt with
+        //a line containing only this information. So the actual "expirationLines" starting from line 2
+        //thus $i = 1 instead of 0.
+        //not pretty, but, should work as long as the cookieExpirationTimes.txt is not removed.
+        for ($i = 1; $i < count($lines); $i++) {
+            if (explode($delimiter, $lines[$i])[0] == $username) {
                 $lines[$i] = $newExpirationLine;
                 $hasMatch = true;
             }
@@ -160,8 +169,6 @@ class LoginModel {
     }
 
     private function getServersideCookieExpiration($username) {
-        //TODO: read and return expiration for user
-
         $delimiter = "::-:-::";
         $filename = "cookieExpirationTimes.txt";
 
@@ -176,5 +183,11 @@ class LoginModel {
         }
 
         return $expirationTime;
+    }
+
+    public function isSessionIntegrityOk() {
+        $currentUserAgent = $_SERVER['HTTP_USER_AGENT'];
+        $sessionUserAgent = isset($_SESSION[$this->sessionUserAgentKey]) ? $_SESSION[$this->sessionUserAgentKey] : "" ;
+        return ($currentUserAgent == $sessionUserAgent);
     }
 }

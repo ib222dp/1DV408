@@ -12,10 +12,10 @@ class FooterHtml {
 		$month = ucfirst(strftime("%B"));
 		$time = strftime("<p> " . $day . ", den %e " . $month . " år %Y. Klockan är [%T].</p>");
 
-		return	'<footer>
-					' . $time . '
-				</footer>
-				</body>
-				</html>';
+		return	'<footer>'
+			. $time .
+			'</footer>
+			</body>
+			</html>';
 	}
 }

@@ -1,20 +1,20 @@
 <?php
-namespace LoginApp;
-?>
 
-<!DOCTYPE html>
-
-<?php
-use LoginApp\Controller as Ctrl;
 ini_set("session.cookie_httponly", true); //prevent javascript to access session cookie
 ini_set('error_reporting', 0); //prevent error reporting on server code
 
 session_start();
 
 require_once("controllers/login-controller.php");
+require_once("controllers/register-controller.php");
 
-setlocale(LC_TIME, 'sv_SE.UTF-8'); //problems on localhost but works on the server.
-date_default_timezone_set('Europe/Stockholm');
+setlocale(LC_ALL, "sv_SE");
 
-$loginCtrl = new Ctrl\LoginController();
-$loginCtrl->start();
+//Anropar RegisterControllers start-metod om "register" finns som URL-parameter, anropar annars LoginControllers start-metod
+if(array_key_exists("register", $_GET)){
+	$registerCtrl = new RegisterController();
+	$registerCtrl->start();
+}else{
+	$loginCtrl = new LoginController();
+	$loginCtrl->start();
+}
